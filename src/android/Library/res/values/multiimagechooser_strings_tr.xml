@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="multi_app_name">MultiImageChooser</string>
+    <string name="free_version_label">Kalan Seçim Hakkınız: %d</string>
+    <string name="error_database">Cihazınızdaki resimler görüntülenirken hata oluştu. Lütfen hatayı rapor ediniz.</string>
+    <string name="requesting_thumbnails">Resimler yükleniyor. Lütfen bekleyiniz..</string>
+    <string name="processing_images_header">Taşınıyor, Lütfen Bekleyiniz</string>
+    <string name="processing_images_message">Seçtiğiniz resimler işleniyor...</string>
+    <string name="maximum_selection_count_error_header">Sınıra ulaşıldı</string>
+    <string name="maximum_selection_count_error_message">Bir defada sadece %d görsel seçilebilir.</string>
+    <string name="discard">İptal</string>
+    <string name="done">Tamam</string>
+</resources>
