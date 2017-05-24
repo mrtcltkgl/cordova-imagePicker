@@ -173,8 +173,11 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
         setupHeader();
         updateAcceptButton();
         progress = new ProgressDialog(this);
-        progress.setTitle("Processing Images");
-        progress.setMessage("This may take a few moments");
+        //progress.setTitle("Görseller İşleniyor");
+	progress.setTitle(getString(fakeR.getId("string", "processing_images_header")));//("Görseller İşleniyor");
+
+        //progress.setMessage("Biraz zaman alabilir");
+	progress.setMessage(getString(fakeR.getId("string", "processing_images_message")));//("Biraz zaman alabilir");
     }
     
     @Override
