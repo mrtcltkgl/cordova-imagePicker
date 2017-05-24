@@ -76,7 +76,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import 	android.content.ContentValues;
 public class MultiImageChooserActivity extends Activity implements OnItemClickListener,
         LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = "ImagePicker";
@@ -111,7 +111,7 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
 
     private final ImageFetcher fetcher = new ImageFetcher();
 
-    private int selectedColor = 0xff32b2e1;
+    private int selectedColor = 0xff5b8e08;
     private boolean shouldRequestThumb = true;
     
     private FakeR fakeR;
@@ -206,11 +206,12 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
                 maxImages--;
                 ImageView imageView = (ImageView)view;
                 if (android.os.Build.VERSION.SDK_INT>=16) {
-                  imageView.setImageAlpha(128);
+                  imageView.setImageAlpha(48);
                 } else {
-                  imageView.setAlpha(128);
-                }
-                view.setBackgroundColor(selectedColor);
+                  imageView.setAlpha(192);
+                }				
+                //view.setBackgroundColor(selectedColor);				
+		view.setBackgroundResource(fakeR.getId("drawable", "sign_check"));
             }
         } else {
             fileNames.remove(name);
@@ -458,11 +459,12 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
             final int rotate = imagecursor.getInt(image_column_orientation);
             if (isChecked(pos)) {
                 if (android.os.Build.VERSION.SDK_INT>=16) {
-                  imageView.setImageAlpha(128);
+                  imageView.setImageAlpha(48);
                 } else {
-                  imageView.setAlpha(128);	
+                  imageView.setAlpha(192);	
                 }
-                imageView.setBackgroundColor(selectedColor);
+                //imageView.setBackgroundColor(selectedColor);
+		imageView.setBackgroundResource(fakeR.getId("drawable", "sign_check"));
             } else {
                 if (android.os.Build.VERSION.SDK_INT>=16) {
                   imageView.setImageAlpha(255);
@@ -537,8 +539,10 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
                         }
                     }
 
-                    file = this.storeImage(bmp, file.getName());
-                    al.add(Uri.fromFile(file).toString());
+		//file = this.storeImage(bmp, file.getName());
+		//al.add(Uri.fromFile(file).toString());
+		String valueURI = getImageContentUri(getApplicationContext(),file).toString();
+		al.add(valueURI);
                 }
                 return al;
             } catch(IOException e) {
@@ -556,6 +560,28 @@ public class MultiImageChooserActivity extends Activity implements OnItemClickLi
                 }
             }
         }
+	public Uri getImageContentUri(Context context, File imageFile) {
+	  String filePath = imageFile.getAbsolutePath();
+	  Cursor cursor = context.getContentResolver().query(
+		  MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+		  new String[] { MediaStore.Images.Media._ID },
+		  MediaStore.Images.Media.DATA + "=? ",
+		  new String[] { filePath }, null);
+	  if (cursor != null && cursor.moveToFirst()) {
+		int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+		cursor.close();
+		return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + id);
+	  } else {
+		if (imageFile.exists()) {
+		  ContentValues values = new ContentValues();
+		  values.put(MediaStore.Images.Media.DATA, filePath);
+		  return context.getContentResolver().insert(
+			  MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+		} else {
+		  return null;
+		}
+	  }
+	} 
         
         @Override
         protected void onPostExecute(ArrayList<String> al) {
